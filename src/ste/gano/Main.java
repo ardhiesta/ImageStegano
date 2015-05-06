@@ -18,81 +18,78 @@ public class Main {
     public static void main(String[] args) {        
         Main mn = new Main();
        
-//        //ubah pesan ke biner, output integer kode ascii dlm array
-//        byte[] pesanDlmAscii = mn.ubahKeAscii("test");
-//        
-//        //gandakan bit, hasil simpan dlm array
-//        ArrayList<String> binerDigandakan = new ArrayList<String>();
-//        for(int i=0; i<pesanDlmAscii.length; i++){
-//            //ubah int kode ascii pesan ke String
-//            String binerAsciiPesan = mn.genapkanBit(Integer.toBinaryString(pesanDlmAscii[i]), 8);
-//            //gandakan bit, simpan di arrayList
-//            binerDigandakan.add(mn.gandakanBit(binerAsciiPesan, 4));
-//            //binerDigandakan = pesan
-//        }
-//        
-//        //------
-//        //xor kunci
-//        int hasilXorKunci = mn.xorKunci("sonny");
-//        
-//        //lcg
-//        ArrayList alHasilLcg = mn.simpleLCG(17, 7, 84, hasilXorKunci);
-//        
-//        //ubah hasil lcg ke biner
-//        Iterator iHasilLcg = alHasilLcg.iterator();
-//        String pseudoNoiseSignal = "";
-//        while(iHasilLcg.hasNext()){
-//            String binerHasilLcg = mn.genapkanBit(Integer.toBinaryString(Integer.parseInt(iHasilLcg.next().toString())), 8);
-//            pseudoNoiseSignal = pseudoNoiseSignal+binerHasilLcg;
-//        }
-//        
-//        String pesanPostProcess = "";
-//        //XOR pesan dengan pseudonoise
-//        for(int i=0; i<binerDigandakan.size(); i++){
-//            System.out.println(binerDigandakan.get(i)+" xor "+pseudoNoiseSignal+" = "+mn.manualXOR(binerDigandakan.get(i), pseudoNoiseSignal)); //hasil ini jadi var stego kalau di class sebelah
-//            pesanPostProcess = pesanPostProcess+mn.manualXOR(binerDigandakan.get(i), pseudoNoiseSignal);
-//        }
-//        
-//        String info_panjang_pesan = mn.genapkanBit(Integer.toBinaryString(pesanPostProcess.length()), DATA_SIZE);
-//        
-//        System.out.println("pesanPostProcess: "+info_panjang_pesan+" -- "+pesanPostProcess);
-//        
-//        pesanPostProcess = info_panjang_pesan+pesanPostProcess;
-//        
-//        
-//        //gambar
-//        BufferedImage bi = Steganography.loadImage("/home/linuxluv/Pictures/1.jpg");
-//        if (bi == null)
-//            System.exit(0);
-//        byte imBytes[] = Steganography.accessBytes(bi);
-//        
-///*        System.out.println("hasil baca gambar");
-//        for(int i=0; i<imBytes.length; i++){
-//            System.out.println("imBytes ["+i+"] "+imBytes[i]);
-//        }*/
-//        
-//        //hide
-//        mn.hideStego_modified(imBytes, pesanPostProcess, 0);
-//        
-//        //get file name gambar
-//        String fnm = Steganography.getFileName("/home/linuxluv/Pictures/1.jpg");
-//        
-//        //test utk lihat apakah last bit sdh ganti
-//        DataBufferByte buffer = (DataBufferByte) bi.getData().getDataBuffer();
-//        byte[] testByte = buffer.getData();
-//        /*for(int i=0; i<testByte.length; i++){
-//            System.out.println("testByte["+i+"] "+testByte[i]);
-//        }
-//        System.out.println("");*/
-//        
-//        // store the modified image in <fnm>Msg.png
-//        Steganography.writeImageToFile( fnm + "Msg.jpg", bi);
+        //ubah pesan ke biner, output integer kode ascii dlm array
+        byte[] pesanDlmAscii = mn.ubahKeAscii("test");
+        
+        //gandakan bit, hasil simpan dlm array
+        ArrayList<String> binerDigandakan = new ArrayList<String>();
+        for(int i=0; i<pesanDlmAscii.length; i++){
+            //ubah int kode ascii pesan ke String
+            String binerAsciiPesan = mn.genapkanBit(Integer.toBinaryString(pesanDlmAscii[i]), 8);
+            //gandakan bit, simpan di arrayList
+            binerDigandakan.add(mn.gandakanBit(binerAsciiPesan, 4));
+            //binerDigandakan = pesan
+        }
+        
+        //------
+        //xor kunci
+        int hasilXorKunci = mn.xorKunci("sonny");
+        
+        //lcg
+        ArrayList alHasilLcg = mn.simpleLCG(17, 7, 84, hasilXorKunci);
+        
+        //ubah hasil lcg ke biner
+        Iterator iHasilLcg = alHasilLcg.iterator();
+        String pseudoNoiseSignal = "";
+        while(iHasilLcg.hasNext()){
+            String binerHasilLcg = mn.genapkanBit(Integer.toBinaryString(Integer.parseInt(iHasilLcg.next().toString())), 8);
+            pseudoNoiseSignal = pseudoNoiseSignal+binerHasilLcg;
+        }
+        
+        String pesanPostProcess = "";
+        //XOR pesan dengan pseudonoise
+        for(int i=0; i<binerDigandakan.size(); i++){
+            System.out.println(binerDigandakan.get(i)+" xor "+pseudoNoiseSignal+" = "+mn.manualXOR(binerDigandakan.get(i), pseudoNoiseSignal)); //hasil ini jadi var stego kalau di class sebelah
+            pesanPostProcess = pesanPostProcess+mn.manualXOR(binerDigandakan.get(i), pseudoNoiseSignal);
+        }
+        
+        String info_panjang_pesan = mn.genapkanBit(Integer.toBinaryString(pesanPostProcess.length()), DATA_SIZE);
+        
+        System.out.println("pesanPostProcess: "+info_panjang_pesan+" -- "+pesanPostProcess);
+        
+        pesanPostProcess = info_panjang_pesan+pesanPostProcess;
         
         
-        //Steganography.hide("/home/linuxluv/Pictures/fb/test_stegano/a.txt", "/home/linuxluv/Pictures/fb/test_stegano/10px.png");
-//        Steganography.reveal("/home/linuxluv/Pictures/1Msg.png");
+        //gambar
+        BufferedImage bi = Steganography.loadImage("/home/linuxluv/Pictures/1.jpg");
+        if (bi == null)
+            System.exit(0);
+        byte imBytes[] = Steganography.accessBytes(bi);
         
-        mn.reveal("/home/linuxluv/Pictures/1Msg.jpg");
+/*        System.out.println("hasil baca gambar");
+        for(int i=0; i<imBytes.length; i++){
+            System.out.println("imBytes ["+i+"] "+imBytes[i]);
+        }*/
+        
+        //hide
+        mn.hideStego_modified(imBytes, pesanPostProcess, 0);
+        
+        //get file name gambar
+        String fnm = Steganography.getFileName("/home/linuxluv/Pictures/1.jpg");
+        
+        //test utk lihat apakah last bit sdh ganti
+        DataBufferByte buffer = (DataBufferByte) bi.getData().getDataBuffer();
+        byte[] testByte = buffer.getData();
+        /*for(int i=0; i<testByte.length; i++){
+            System.out.println("testByte["+i+"] "+testByte[i]);
+        }
+        System.out.println("");*/
+        
+        // store the modified image in <fnm>Msg.png
+        Steganography.writeImageToFile( fnm + "Msg.jpg", bi);
+        
+        //membaca pixel gambar berisi pesan
+        //mn.reveal("/home/linuxluv/Pictures/1Msg.jpg");
     }
     
     public boolean reveal(String imFnm){
