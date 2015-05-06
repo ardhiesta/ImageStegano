@@ -60,10 +60,10 @@ public class Steganography {
         DataBufferByte buffer = (DataBufferByte) im.getData().getDataBuffer();
         byte[] testByte = buffer.getData();
         
-        for(int i=0; i<testByte.length; i++){
+        /*for(int i=0; i<testByte.length; i++){
             System.out.println("testByte["+i+"] "+testByte[i]);
         }
-        System.out.println("");
+        System.out.println("");*/
 	return writeImageToFile( fnm + "Msg.png", im);
     }  // end of hide()
     
@@ -104,12 +104,12 @@ public class Steganography {
     { 
         // convert data to byte arrays
 	byte[] msgBytes = inputText.getBytes();
-	System.out.println(">> msgBytes: "+msgBytes);
+	/*System.out.println(">> msgBytes: "+msgBytes);
 	for(int i=0; i<msgBytes.length; i++){
             System.out.println(">> msgBytes["+i+"]: "+msgBytes[i]);
 	    System.out.println(Integer.toBinaryString(msgBytes[i]));
         }
-	System.out.println("");
+	System.out.println("");*/
 	byte[] lenBs = intToBytes(msgBytes.length);
 	System.out.println(">> msgBytes.length : "+msgBytes.length);
 	for(int i=0; i<lenBs.length; i++){
@@ -122,20 +122,20 @@ public class Steganography {
 	System.out.println("");
 	byte[] stego = new byte[totalLen];    // for holding the resulting stego
 	    
-	for(int i=0; i<stego.length; i++){
+	/*for(int i=0; i<stego.length; i++){
             System.out.println(">> stego["+i+"]: "+stego[i]);
         }
-	System.out.println("");
+	System.out.println("");*/
 
 	// combine the 2 fields into one byte array
 	// public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length);
 	System.arraycopy(lenBs, 0, stego, 0, lenBs.length);          // length of binary message
 	System.arraycopy(msgBytes, 0, stego, lenBs.length, msgBytes.length);   // binary message
 	    
-	for(int i=0; i<stego.length; i++){
+	/*for(int i=0; i<stego.length; i++){
             System.out.println(">> stego["+i+"]: "+stego[i]);
         }
-	System.out.println("");
+	System.out.println("");*/
 
 	// System.out.println("Num. pixels to store fragment " + i + ": " + totalLen*DATA_SIZE);
 	return stego;
@@ -158,6 +158,20 @@ public class Steganography {
     }  // end of intToBytes()
     
     public static BufferedImage loadImage(String imFnm)
+    // read the image from the imFnm file
+    {
+        BufferedImage im = null;
+	try {
+            im = ImageIO.read( new File(imFnm) );
+	    System.out.println("Read " + imFnm);
+        } 
+	catch (IOException e) 
+	{ System.out.println("Could not read image from " + imFnm);  }
+
+	return im;
+    }   // end of loadImage()
+    
+    public BufferedImage loadImage_NotStatic(String imFnm)
     // read the image from the imFnm file
     {
         BufferedImage im = null;
@@ -218,18 +232,18 @@ public class Steganography {
 //        System.out.println("");
         for (int i = 0; i < stego.length; i++) {       // loop through stego //looping sesuai panjang pesan yg sdh diStego
             int byteVal = stego[i];
-            System.out.println("byteVal0: "+byteVal);
+            //System.out.println("byteVal0: "+byteVal);
 //            System.out.println("");
-            System.out.println("imBytes["+offset+"]A: "+imBytes[offset]);
+            //System.out.println("imBytes["+offset+"]A: "+imBytes[offset]);
 	    for(int j=7; j >= 0; j--) {    // loop through the 8 bits of each stego byte
                 int bitVal = (byteVal >>> j) & 1;
-                System.out.println("byteVal1: "+byteVal);
+                //System.out.println("byteVal1: "+byteVal);
                 
-                System.out.println("imBytes["+offset+"]B: "+imBytes[offset]);
+                //System.out.println("imBytes["+offset+"]B: "+imBytes[offset]);
                 // change last bit of image byte to be the stego bit
 	        imBytes[offset] = (byte)((imBytes[offset] & 0xFE) | bitVal); //HERE HERE
-                System.out.println("imBytes["+offset+"]C: "+imBytes[offset]); //imBytes[offset] yang ditampilkan di sini adalah bentuk desimal, belum biner
-                System.out.println("");
+                //System.out.println("imBytes["+offset+"]C: "+imBytes[offset]); //imBytes[offset] yang ditampilkan di sini adalah bentuk desimal, belum biner
+                //System.out.println("");
 	        offset++;
             }
         }
@@ -327,15 +341,15 @@ public class Steganography {
 	if (lenBytes == null)
             return -1;
 
-	// for (int j=0; j < lenBytes.length; j++)
-	//  System.out.println(" lenBytes[ " + j + "]: " + lenBytes[j]);
+	 for (int j=0; j < lenBytes.length; j++)
+	  System.out.println(" lenBytes[ " + j + "]: " + lenBytes[j]);
 
 	// convert the byte array into an integer
 	int msgLen = ((lenBytes[0] & 0xff) << 24) | 
             ((lenBytes[1] & 0xff) << 16) | 
 	    ((lenBytes[2] & 0xff) << 8) | 
 	    (lenBytes[3] & 0xff);
-	// System.out.println("Message length: " + msgLen);
+	 System.out.println("Message length: " + msgLen);
 
 	if ((msgLen <= 0) || (msgLen > imBytes.length))  {
             System.out.println("Incorrect message length");
@@ -361,7 +375,7 @@ public class Steganography {
 
         // check the message is all characters
 	if (isPrintable(msg)) {
-            // System.out.println("Found message: \"" + msg + "\"");
+             System.out.println("Found message: \"" + msg + "\"");
 	    return msg;
         }
 	else
@@ -378,14 +392,28 @@ public class Steganography {
         }
 
 	byte[] hiddenBytes = new byte[size];
+        
+        //test
+//        for(int i=0; i<hiddenBytes.length; i++){
+//            System.out.println("> hiddenBytes["+i+"] "+hiddenBytes[i]);
+//        }
 
 	for (int j = 0; j < size; j++) {    // loop through each hidden byte
             for (int i=0; i < DATA_SIZE; i++) {   // make one hidden byte from DATA_SIZE image bytes
-                hiddenBytes[j] = (byte) ((hiddenBytes[j] << 1) | (imBytes[offset] & 1));   
-	                             // shift existing 1 left; store right most bit of image byte
+                //test
+                int b1 = hiddenBytes[j] << 1;
+                int b2 = imBytes[offset] & 1;
+                //System.out.println("hiddenBytes["+j+"] : "+hiddenBytes[j]+" , imBytes["+offset+"] : "+imBytes[offset]+" , b1: "+b1+" , b2: "+b2);
+                
+                hiddenBytes[j] = (byte) ((hiddenBytes[j] << 1) | (imBytes[offset] & 1));   // | : operator OR
+	                             // shift existing 1 left; store right most bit of image byte // << Binary Left Shift Operator
+                
+                /*System.out.println("-> hiddenBytes["+j+"] : "+hiddenBytes[j]);
+                System.out.println("");*/
 	        offset++;
             }
         }
+        System.out.println("");
 	return hiddenBytes;
     }  // end of extractHiddenBytes()
 	
